@@ -97,6 +97,9 @@ const List<FeatureSection> featureOverviewSections = [
       'Antippen einer Kachel öffnet den großen Verlauf mit Zeitraumfilter 1W, 1M, 3M, 1J und Alles (bezogen auf die letzte Messung); voreingestellt sind 3 Monate. Mit den Pfeilen lässt sich um jeweils einen Zeitraum zurück- und wieder vorwärtsblättern (zum Beispiel ins vorherige Quartal), der gewählte Zeitraum wird mit Datum angezeigt sowie Minimum, Durchschnitt, Maximum und Änderung.',
     ),
     FeatureItem(
+      'Tippen auf den großen Verlauf schaltet zwischen Rohdaten (zackig, mit allen Punkten) und geglätteter Kurve um; die Rohwerte bleiben blass sichtbar.',
+    ),
+    FeatureItem(
       'Optik: unscharfer, überbelichteter Sport-Hintergrund aus abstrakten Silhouetten (keine erkennbaren Personen), Farbverlauf-Kacheln und kräftige Schrift.',
     ),
     FeatureItem(
@@ -158,6 +161,10 @@ const List<FeatureSection> featureOverviewSections = [
     ),
     FeatureItem(
       '23.11.2026: Blättern zwischen Zeiträumen, Sport-Hintergrund und neue Kachel-Optik.',
+      FeatureStatus.info,
+    ),
+    FeatureItem(
+      '23.11.2026: Verlauf per Tippen glätten oder als Rohdaten zeigen.',
       FeatureStatus.info,
     ),
   ]),

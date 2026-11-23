@@ -91,6 +91,7 @@ class RangeChart extends StatelessWidget {
     this.lowerLabel,
     this.optLabel,
     this.optEnd,
+    this.smooth = false,
     this.height = 280,
   });
 
@@ -106,6 +107,9 @@ class RangeChart extends StatelessWidget {
 
   /// Wert der Optimum-Linie am rechten Rand; [RefRange.opt] gilt dann links.
   final double? optEnd;
+
+  /// Geglättete Kurve statt der Rohdaten.
+  final bool smooth;
   final double height;
 
   @override
@@ -126,6 +130,7 @@ class RangeChart extends StatelessWidget {
           lowerLabel: lowerLabel,
           optLabel: optLabel,
           optEnd: optEnd,
+          smooth: smooth,
           line: scheme.primary,
           grid: scheme.outlineVariant,
           text: scheme.onSurfaceVariant,
@@ -150,6 +155,7 @@ class _ChartPainter extends CustomPainter {
     required this.lowerLabel,
     required this.optLabel,
     required this.optEnd,
+    required this.smooth,
     required this.line,
     required this.grid,
     required this.text,
@@ -168,6 +174,7 @@ class _ChartPainter extends CustomPainter {
   final String? lowerLabel;
   final String? optLabel;
   final double? optEnd;
+  final bool smooth;
   final Color line;
   final Color grid;
   final Color text;
@@ -336,23 +343,67 @@ class _ChartPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeJoin = StrokeJoin.round
       ..strokeCap = StrokeCap.round;
-    final path = Path();
-    for (var i = 0; i < points.length; i++) {
-      final o = Offset(x(points[i].t), y(points[i].v));
-      if (i == 0) {
-        path.moveTo(o.dx, o.dy);
-      } else {
-        path.lineTo(o.dx, o.dy);
+    final dot = Paint()..color = line;
+    final raw = [for (final p in points) Offset(x(p.t), y(p.v))];
+    final shown = smooth ? [for (final o in smoothed(raw)) o] : raw;
+
+    final path = Path()..moveTo(shown.first.dx, shown.first.dy);
+    if (smooth && shown.length > 2) {
+      // Catmull-Rom als Bézier-Kurve
+      for (var i = 0; i < shown.length - 1; i++) {
+        final p0 = shown[i == 0 ? 0 : i - 1];
+        final p1 = shown[i];
+        final p2 = shown[i + 1];
+        final p3 = shown[i + 2 < shown.length ? i + 2 : i + 1];
+        path.cubicTo(
+          p1.dx + (p2.dx - p0.dx) / 6,
+          p1.dy + (p2.dy - p0.dy) / 6,
+          p2.dx - (p3.dx - p1.dx) / 6,
+          p2.dy - (p3.dy - p1.dy) / 6,
+          p2.dx,
+          p2.dy,
+        );
+      }
+    } else {
+      for (var i = 1; i < shown.length; i++) {
+        path.lineTo(shown[i].dx, shown[i].dy);
       }
     }
     canvas.drawPath(path, linePaint);
-    final dot = Paint()..color = line;
-    for (final p in points) {
-      canvas.drawCircle(Offset(x(p.t), y(p.v)), 2.2, dot);
+
+    if (smooth) {
+      // Rohwerte nur blass als Punkte
+      final faint = Paint()..color = line.withAlpha(70);
+      for (final o in raw) {
+        canvas.drawCircle(o, 2.2, faint);
+      }
+    } else {
+      for (final o in raw) {
+        canvas.drawCircle(o, 2.2, dot);
+      }
     }
-    final lastO = Offset(x(points.last.t), y(points.last.v));
+    final lastO = shown.last;
     canvas.drawCircle(lastO, 6.5, Paint()..color = surface);
     canvas.drawCircle(lastO, 4.5, dot);
+  }
+
+  /// Gewichteter gleitender Durchschnitt (1-2-3-2-1) über die y-Werte.
+  static List<Offset> smoothed(List<Offset> src) {
+    if (src.length < 3) return src;
+    const w = [1.0, 2.0, 3.0, 2.0, 1.0];
+    final out = <Offset>[];
+    for (var i = 0; i < src.length; i++) {
+      var sum = 0.0;
+      var wsum = 0.0;
+      for (var k = -2; k <= 2; k++) {
+        final j = i + k;
+        if (j < 0 || j >= src.length) continue;
+        sum += src[j].dy * w[k + 2];
+        wsum += w[k + 2];
+      }
+      out.add(Offset(src[i].dx, sum / wsum));
+    }
+    return out;
   }
 
   @override
