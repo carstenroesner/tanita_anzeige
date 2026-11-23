@@ -100,7 +100,7 @@ const List<FeatureSection> featureOverviewSections = [
       'Der große Verlauf startet geglättet (weiche Kurve, Rohwerte blass sichtbar). Tippen auf das Diagramm schaltet zu den Rohdaten (zackig, mit allen Punkten) um und zurück. Die Voreinstellung lässt sich in den Einstellungen ändern.',
     ),
     FeatureItem(
-      'Überschriften im Design „Variante B“: helle, schlanke Schrift mit Verlaufsbalken darunter; Slot-Kacheln mit Verlauf-Kopfband.',
+      'Überschriften im Design „Variante B“: weiße, schlanke Schrift auf einem leicht durchsichtigen Feld mit Verlaufsbalken darunter; Slot-Kacheln mit Verlauf-Kopfband.',
     ),
     FeatureItem(
       'Optik: unscharfer, überbelichteter Sport-Hintergrund aus abstrakten Silhouetten (keine erkennbaren Personen), Farbverlauf-Kopfband der Kacheln.',
@@ -176,6 +176,10 @@ const List<FeatureSection> featureOverviewSections = [
     ),
     FeatureItem(
       '23.11.2026: Überschriften-Design Variante B (helle Schrift, Verlaufsbalken, Kopfband).',
+      FeatureStatus.info,
+    ),
+    FeatureItem(
+      '23.11.2026: Überschriften weiß auf leicht durchsichtigem Feld.',
       FeatureStatus.info,
     ),
   ]),
