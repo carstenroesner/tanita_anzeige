@@ -11,6 +11,7 @@ import '../services/tanita_service.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/charts.dart';
 import 'detail_screen.dart';
+import '../widgets/gradient_app_bar.dart';
 
 /// Dashboard eines Slots: letzte Werte mit kleinem Verlauf.
 class DashboardScreen extends StatelessWidget {
@@ -28,7 +29,7 @@ class DashboardScreen extends StatelessWidget {
 
     if (data == null) {
       return BackdropScaffold(
-        appBar: AppBar(title: Text(title)),
+        appBar: GradientAppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
     }
@@ -36,13 +37,13 @@ class DashboardScreen extends StatelessWidget {
     final last = view.last;
     if (last == null) {
       return BackdropScaffold(
-        appBar: AppBar(title: Text(title)),
+        appBar: GradientAppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
     }
     final scheme = Theme.of(context).colorScheme;
     return BackdropScaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: GradientAppBar(title: Text(title)),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 840),

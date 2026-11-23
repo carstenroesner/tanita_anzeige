@@ -24,10 +24,9 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         scrolledUnderElevation: 0,
         titleTextStyle: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w800,
-          fontStyle: FontStyle.italic,
-          letterSpacing: -0.3,
+          fontSize: 28,
+          fontWeight: FontWeight.w400,
+          letterSpacing: -0.4,
         ),
       ),
     );

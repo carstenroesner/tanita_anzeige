@@ -12,6 +12,7 @@ import '../services/tanita_parser.dart';
 import '../services/tanita_service.dart';
 import '../services/tanita_sync.dart';
 import '../widgets/status_chip.dart';
+import '../widgets/gradient_app_bar.dart';
 
 /// Wählt Dateien aus (austauschbar für Tests).
 typedef FilePickFn = Future<List<ImportFile>> Function();
@@ -82,7 +83,7 @@ class _ImportScreenState extends State<ImportScreen> {
   Widget build(BuildContext context) {
     final result = _result;
     return Scaffold(
-      appBar: AppBar(title: Text(context.t('import_title'))),
+      appBar: GradientAppBar(title: Text(context.t('import_title'))),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),

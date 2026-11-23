@@ -100,7 +100,10 @@ const List<FeatureSection> featureOverviewSections = [
       'Der große Verlauf startet geglättet (weiche Kurve, Rohwerte blass sichtbar). Tippen auf das Diagramm schaltet zu den Rohdaten (zackig, mit allen Punkten) um und zurück. Die Voreinstellung lässt sich in den Einstellungen ändern.',
     ),
     FeatureItem(
-      'Optik: unscharfer, überbelichteter Sport-Hintergrund aus abstrakten Silhouetten (keine erkennbaren Personen), Farbverlauf-Kacheln und kräftige Schrift.',
+      'Überschriften im Design „Variante B“: helle, schlanke Schrift mit Verlaufsbalken darunter; Slot-Kacheln mit Verlauf-Kopfband.',
+    ),
+    FeatureItem(
+      'Optik: unscharfer, überbelichteter Sport-Hintergrund aus abstrakten Silhouetten (keine erkennbaren Personen), Farbverlauf-Kopfband der Kacheln.',
     ),
     FeatureItem(
       'Im Verlauf sind oberer und unterer Grenzwert und eine Optimum-Linie eingezeichnet. Das Optimum ist die Mitte des Bereichs. Beim Stoffwechselalter zeigt die Linie das tatsächliche Alter, das über den Zeitraum ansteigt; ohne genaues Geburtsdatum wird der 1. Januar des Geburtsjahres angenommen.',
@@ -169,6 +172,10 @@ const List<FeatureSection> featureOverviewSections = [
     ),
     FeatureItem(
       '23.11.2026: Verläufe starten standardmäßig geglättet, einstellbar.',
+      FeatureStatus.info,
+    ),
+    FeatureItem(
+      '23.11.2026: Überschriften-Design Variante B (helle Schrift, Verlaufsbalken, Kopfband).',
       FeatureStatus.info,
     ),
   ]),

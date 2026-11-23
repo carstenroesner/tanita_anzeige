@@ -10,6 +10,7 @@ import '../services/tanita_service.dart';
 import '../widgets/backdrop.dart';
 import '../widgets/charts.dart';
 import '../widgets/status_chip.dart';
+import '../widgets/gradient_app_bar.dart';
 
 enum _Range { week, month, quarter, year, all }
 
@@ -55,7 +56,7 @@ class _DetailScreenState extends State<DetailScreen> {
         settings.nameOf(widget.slotNumber) ?? tr(lang, 'slot_title', [widget.slotNumber]);
     if (data == null) {
       return BackdropScaffold(
-        appBar: AppBar(title: Text(title)),
+        appBar: GradientAppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
     }
@@ -63,7 +64,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final last = view.last;
     if (last == null) {
       return BackdropScaffold(
-        appBar: AppBar(title: Text(title)),
+        appBar: GradientAppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
     }
@@ -141,7 +142,7 @@ class _DetailScreenState extends State<DetailScreen> {
     }
 
     return BackdropScaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: GradientAppBar(title: Text(title)),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 840),

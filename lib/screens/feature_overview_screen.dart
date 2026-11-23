@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../content/feature_overview_content.dart';
+import '../widgets/gradient_app_bar.dart';
 
 /// Zeigt den Funktionsumfang der App (deckungsgleich mit FUNKTIONSUMFANG.md).
 class FeatureOverviewScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class FeatureOverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Funktionsumfang')),
+      appBar: GradientAppBar(title: const Text('Funktionsumfang')),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),

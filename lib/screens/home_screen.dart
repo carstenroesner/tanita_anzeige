@@ -12,6 +12,7 @@ import '../widgets/app_menu.dart';
 import '../widgets/backdrop.dart';
 import 'dashboard_screen.dart';
 import 'import_screen.dart';
+import '../widgets/gradient_app_bar.dart';
 
 /// Startbildschirm: Kacheln für die Slots der Waage.
 class HomeScreen extends StatelessWidget {
@@ -36,7 +37,7 @@ class HomeScreen extends StatelessWidget {
     final due = last == null || days! >= settings.remindDays;
 
     return BackdropScaffold(
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: Text(context.t('app_title')),
         actions: [
           IconButton(
@@ -240,86 +241,98 @@ class _SlotTile extends StatelessWidget {
     final lastM = view.last ?? data.last;
     final weight = lastM?['Wk'];
     final title = settings.nameOf(slotNumber) ?? profileLine(lang, data);
-    const onGrad = Colors.white;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    const onBand = Colors.white;
+    final band = dark
+        ? const [Color(0xFF4A5A6A), Color(0xFF1E2530)]
+        : const [AppColors.teal, AppColors.tealLight];
     return Card(
       margin: EdgeInsets.zero,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       clipBehavior: Clip.antiAlias,
-      child: Ink(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.teal, AppColors.tealLight],
+      child: InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => DashboardScreen(slotNumber: slotNumber),
           ),
         ),
-        child: InkWell(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (_) => DashboardScreen(slotNumber: slotNumber),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(14, 10, 12, 8),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: band,
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '$slotNumber',
+                    style: const TextStyle(
+                      fontSize: 52,
+                      height: 1,
+                      fontWeight: FontWeight.w900,
+                      fontStyle: FontStyle.italic,
+                      color: onBand,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12, color: Color(0xCCFFFFFF)),
+                    ),
+                  ),
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: AppColors.orange,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(14, 8, 14, 10),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '$slotNumber',
-                      style: const TextStyle(
-                        fontSize: 64,
-                        height: 1,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: onGrad,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        weight == null ? '–' : '${fmtNum(lang, weight)} kg',
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                    const Spacer(),
-                    Container(
-                      width: 12,
-                      height: 12,
-                      margin: const EdgeInsets.only(top: 6),
-                      decoration: const BoxDecoration(
-                        color: AppColors.orange,
-                        shape: BoxShape.circle,
-                      ),
+                    Text(
+                      data.lastImport == null
+                          ? ''
+                          : tr(lang, 'home_import_label', [fmtDate(lang, data.lastImport!)]),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
                     ),
                   ],
                 ),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: Color(0xCCFFFFFF)),
-                ),
-                const Spacer(),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    weight == null ? '–' : '${fmtNum(lang, weight)} kg',
-                    style: const TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      color: onGrad,
-                    ),
-                  ),
-                ),
-                Text(
-                  data.lastImport == null
-                      ? ''
-                      : tr(lang, 'home_import_label', [fmtDate(lang, data.lastImport!)]),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: Color(0xCCFFFFFF)),
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

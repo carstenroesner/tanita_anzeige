@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../l10n/strings.dart';
 import '../services/settings_service.dart';
 import '../services/tanita_sync.dart';
+import '../widgets/gradient_app_bar.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -28,7 +29,7 @@ class SettingsScreen extends StatelessWidget {
         );
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.t('set_title'))),
+      appBar: GradientAppBar(title: Text(context.t('set_title'))),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
