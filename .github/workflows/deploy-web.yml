@@ -1,0 +1,71 @@
+name: Deploy Web
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+  schedule:
+    # Nächtlicher Build, damit Erweiterungen des Moduls app_auth automatisch ankommen
+    - cron: '41 3 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Web-Scaffolding erzeugen (nur falls web/ fehlt)
+        run: |
+          if [ ! -d web ]; then
+            flutter create --platforms=web .
+          fi
+
+      - name: App-Icons einspielen (branding/ -> web/)
+        run: |
+          mkdir -p web/icons
+          cp branding/Icon-192.png branding/Icon-512.png branding/Icon-maskable-192.png branding/Icon-maskable-512.png web/icons/
+          cp branding/favicon.png web/favicon.png
+          if [ -f web/index.html ]; then
+            sed -i -E 's#<title>[^<]*</title>#<title>Tanita Anzeige</title>#; s#(apple-mobile-web-app-title" content=")[^"]*#\1Tanita Anzeige#' web/index.html
+          fi
+          if [ -f web/manifest.json ]; then
+            sed -i -E 's/"name": *"[^"]*"/"name": "Tanita Anzeige"/; s/"short_name": *"[^"]*"/"short_name": "Tanita Anzeige"/' web/manifest.json
+            sed -i -E 's/"theme_color": *"[^"]*"/"theme_color": "#0E7C86"/; s/"background_color": *"[^"]*"/"background_color": "#E3F4F5"/' web/manifest.json
+          fi
+
+      - name: Abhängigkeiten laden (app_auth immer auf neuestem Stand)
+        run: |
+          flutter pub get
+          flutter pub upgrade app_auth
+
+      - name: Tests
+        run: flutter test
+
+      - name: Web-Build
+        run: flutter build web --release --base-href /tanita_anzeige/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+      - name: Deploy auf GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

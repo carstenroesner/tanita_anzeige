@@ -1,0 +1,30 @@
+name: tanita_anzeige
+description: "Tanita Anzeige - Analysedaten der Tanita-Körperanalysewaage importieren und darstellen (Web-App)."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  provider: ^6.1.2
+  shared_preferences: ^2.3.2
+  url_launcher: ^6.3.0
+  file_picker: ^8.1.2
+  archive: ^3.6.1
+  app_auth:
+    git:
+      url: https://github.com/carstenroesner/app_auth
+      ref: master
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

@@ -1,0 +1,14 @@
+.DS_Store
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+*.iml
+pubspec.lock
+# Rohdaten der Waage gehören nicht ins Repo
+*.CSV
+*.csv
