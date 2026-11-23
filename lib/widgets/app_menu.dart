@@ -61,20 +61,22 @@ class AppMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loggedIn = context.watch<AuthService>().loggedIn;
+    // Texte vorab lesen: itemBuilder läuft außerhalb von build().
+    final lAccount = context.t(loggedIn ? 'menu_account_in' : 'menu_account');
+    final lSettings = context.t('menu_settings');
+    final lFeatures = context.t('menu_features');
+    final lReport = context.t('menu_report');
+    final lAbout = context.t('menu_about');
     return PopupMenuButton<_MenuAction>(
       tooltip: context.t('tt_menu'),
       icon: const Icon(Icons.more_vert),
       onSelected: (action) => _handle(context, action),
       itemBuilder: (_) => [
-        _item(
-          _MenuAction.account,
-          Icons.account_circle_outlined,
-          context.t(loggedIn ? 'menu_account_in' : 'menu_account'),
-        ),
-        _item(_MenuAction.settings, Icons.settings_outlined, context.t('menu_settings')),
-        _item(_MenuAction.features, Icons.checklist, context.t('menu_features')),
-        _item(_MenuAction.report, Icons.bug_report_outlined, context.t('menu_report')),
-        _item(_MenuAction.about, Icons.info_outline, context.t('menu_about')),
+        _item(_MenuAction.account, Icons.account_circle_outlined, lAccount),
+        _item(_MenuAction.settings, Icons.settings_outlined, lSettings),
+        _item(_MenuAction.features, Icons.checklist, lFeatures),
+        _item(_MenuAction.report, Icons.bug_report_outlined, lReport),
+        _item(_MenuAction.about, Icons.info_outline, lAbout),
       ],
     );
   }
