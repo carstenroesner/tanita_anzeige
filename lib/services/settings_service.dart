@@ -17,6 +17,7 @@ class SettingsService extends ChangeNotifier {
   int _remindDays = 14;
   int _slotCount = 4;
   bool _hideSuspicious = true;
+  bool _smoothDefault = true;
   final Map<int, String> _names = {};
 
   /// Der Hinweis „Import fällig“ wurde in dieser Sitzung weggeklickt.
@@ -26,6 +27,9 @@ class SettingsService extends ChangeNotifier {
   int get remindDays => _remindDays;
   int get slotCount => _slotCount;
   bool get hideSuspicious => _hideSuspicious;
+
+  /// Verläufe starten geglättet (Tippen auf das Diagramm schaltet um).
+  bool get smoothDefault => _smoothDefault;
 
   String? nameOf(int slot) {
     final n = _names[slot]?.trim();
@@ -41,6 +45,7 @@ class SettingsService extends ChangeNotifier {
       _remindDays = (m['remind'] as num?)?.toInt() ?? 14;
       _slotCount = (m['slots'] as num?)?.toInt() == 8 ? 8 : 4;
       _hideSuspicious = (m['hide'] as bool?) ?? true;
+      _smoothDefault = (m['smooth'] as bool?) ?? true;
       final names = (m['names'] as Map?)?.cast<String, dynamic>() ?? const {};
       for (final e in names.entries) {
         final n = int.tryParse(e.key);
@@ -59,6 +64,7 @@ class SettingsService extends ChangeNotifier {
         'remind': _remindDays,
         'slots': _slotCount,
         'hide': _hideSuspicious,
+        'smooth': _smoothDefault,
         'names': {for (final e in _names.entries) '${e.key}': e.value},
       }),
     );
@@ -82,6 +88,11 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setHideSuspicious(bool v) {
     _hideSuspicious = v;
+    return _save();
+  }
+
+  Future<void> setSmoothDefault(bool v) {
+    _smoothDefault = v;
     return _save();
   }
 

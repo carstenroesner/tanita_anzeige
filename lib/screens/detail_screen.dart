@@ -31,8 +31,9 @@ class _DetailScreenState extends State<DetailScreen> {
   /// Wie viele Zeiträume zurückgeblättert wurde (0 = aktuellster).
   int _offset = 0;
 
-  /// Geglättete Kurve (Tippen auf das Diagramm schaltet um).
-  bool _smooth = false;
+  /// Geglättete Kurve; null = Voreinstellung aus den Einstellungen. Tippen auf
+  /// das Diagramm schaltet um.
+  bool? _smoothOverride;
 
   static Duration _length(_Range r) => switch (r) {
         _Range.week => const Duration(days: 7),
@@ -47,6 +48,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final settings = context.watch<SettingsService>();
     final service = context.watch<TanitaService>();
     final lang = settings.language;
+    final smooth = _smoothOverride ?? settings.smoothDefault;
     final scheme = Theme.of(context).colorScheme;
     final data = service.slot(widget.slotNumber);
     final title =
@@ -231,7 +233,7 @@ class _DetailScreenState extends State<DetailScreen> {
               else
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => setState(() => _smooth = !_smooth),
+                  onTap: () => setState(() => _smoothOverride = !smooth),
                   child: RangeChart(
                   points: points,
                   xMin: start,
@@ -245,13 +247,13 @@ class _DetailScreenState extends State<DetailScreen> {
                   lowerLabel: lower,
                   optLabel: opt,
                   optEnd: optEnd,
-                  smooth: _smooth,
+                  smooth: smooth,
                   ),
                 ),
               const SizedBox(height: 8),
               Text(
                 '${tr(lang, 'detail_info', [tr(lang, info.nameKey), points.length])}\n'
-                '${tr(lang, _smooth ? 'chart_smooth' : 'chart_raw')}',
+                '${tr(lang, smooth ? 'chart_smooth' : 'chart_raw')}',
                 style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
               ),
               if (mn != null) ...[

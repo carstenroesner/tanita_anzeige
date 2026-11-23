@@ -121,6 +121,12 @@ class SettingsScreen extends StatelessWidget {
                 value: s.hideSuspicious,
                 onChanged: s.setHideSuspicious,
               ),
+              SwitchListTile(
+                title: Text(context.t('set_smooth')),
+                subtitle: Text(context.t('set_smooth_sub')),
+                value: s.smoothDefault,
+                onChanged: s.setSmoothDefault,
+              ),
               ListTile(
                 title: Text(context.t('set_ranges')),
                 subtitle: Text(context.t('set_ranges_sub')),

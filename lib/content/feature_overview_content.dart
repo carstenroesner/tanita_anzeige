@@ -97,7 +97,7 @@ const List<FeatureSection> featureOverviewSections = [
       'Antippen einer Kachel öffnet den großen Verlauf mit Zeitraumfilter 1W, 1M, 3M, 1J und Alles (bezogen auf die letzte Messung); voreingestellt sind 3 Monate. Mit den Pfeilen lässt sich um jeweils einen Zeitraum zurück- und wieder vorwärtsblättern (zum Beispiel ins vorherige Quartal), der gewählte Zeitraum wird mit Datum angezeigt sowie Minimum, Durchschnitt, Maximum und Änderung.',
     ),
     FeatureItem(
-      'Tippen auf den großen Verlauf schaltet zwischen Rohdaten (zackig, mit allen Punkten) und geglätteter Kurve um; die Rohwerte bleiben blass sichtbar.',
+      'Der große Verlauf startet geglättet (weiche Kurve, Rohwerte blass sichtbar). Tippen auf das Diagramm schaltet zu den Rohdaten (zackig, mit allen Punkten) um und zurück. Die Voreinstellung lässt sich in den Einstellungen ändern.',
     ),
     FeatureItem(
       'Optik: unscharfer, überbelichteter Sport-Hintergrund aus abstrakten Silhouetten (keine erkennbaren Personen), Farbverlauf-Kacheln und kräftige Schrift.',
@@ -125,7 +125,7 @@ const List<FeatureSection> featureOverviewSections = [
       'Sprache: Deutsch, Englisch, Niederländisch, Spanisch.',
     ),
     FeatureItem(
-      'Import-Erinnerung in Tagen, Anzahl der Slots (4 oder 8), Auffälliges ausblenden und eigene Namen für die Slots.',
+      'Import-Erinnerung in Tagen, Anzahl der Slots (4 oder 8), Verläufe geglättet starten, Auffälliges ausblenden und eigene Namen für die Slots.',
     ),
     FeatureItem(
       'Konto-Bereich mit Anmeldung über das zentrale Konto-Portal und Schaltfläche zum sofortigen Abgleich.',
@@ -165,6 +165,10 @@ const List<FeatureSection> featureOverviewSections = [
     ),
     FeatureItem(
       '23.11.2026: Verlauf per Tippen glätten oder als Rohdaten zeigen.',
+      FeatureStatus.info,
+    ),
+    FeatureItem(
+      '23.11.2026: Verläufe starten standardmäßig geglättet, einstellbar.',
       FeatureStatus.info,
     ),
   ]),

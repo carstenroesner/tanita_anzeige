@@ -38,7 +38,7 @@ Diese Datei ist fachlich deckungsgleich mit dem In-App-Screen Funktionsumfang (l
 - [x] Jede Kachel zeigt die Änderung zur Vormessung, eine Statusmarke (unter, im oder über dem Bereich) und einen kleinen Verlauf der letzten drei Monate.
 - [x] Segment-Analyse mit Fett- und Muskelwerten für beide Arme, beide Beine und den Rumpf.
 - [x] Antippen einer Kachel öffnet den großen Verlauf mit Zeitraumfilter 1W, 1M, 3M, 1J und Alles (bezogen auf die letzte Messung); voreingestellt sind 3 Monate. Mit den Pfeilen lässt sich um jeweils einen Zeitraum zurück- und wieder vorwärtsblättern (zum Beispiel ins vorherige Quartal), der gewählte Zeitraum wird mit Datum angezeigt sowie Minimum, Durchschnitt, Maximum und Änderung.
-- [x] Tippen auf den großen Verlauf schaltet zwischen Rohdaten (zackig, mit allen Punkten) und geglätteter Kurve um; die Rohwerte bleiben blass sichtbar.
+- [x] Der große Verlauf startet geglättet (weiche Kurve, Rohwerte blass sichtbar). Tippen auf das Diagramm schaltet zu den Rohdaten (zackig, mit allen Punkten) um und zurück. Die Voreinstellung lässt sich in den Einstellungen ändern.
 - [x] Optik: unscharfer, überbelichteter Sport-Hintergrund aus abstrakten Silhouetten (keine erkennbaren Personen), Farbverlauf-Kacheln und kräftige Schrift.
 - [x] Im Verlauf sind oberer und unterer Grenzwert und eine Optimum-Linie eingezeichnet. Das Optimum ist die Mitte des Bereichs. Beim Stoffwechselalter zeigt die Linie das tatsächliche Alter, das über den Zeitraum ansteigt; ohne genaues Geburtsdatum wird der 1. Januar des Geburtsjahres angenommen.
 - [x] Auffällige Messungen (Gerätedatum vor 2015, stark abweichendes Gewicht) werden standardmäßig ausgeblendet; das lässt sich in den Einstellungen ändern.
@@ -52,7 +52,7 @@ Diese Datei ist fachlich deckungsgleich mit dem In-App-Screen Funktionsumfang (l
 ## Einstellungen
 
 - [x] Sprache: Deutsch, Englisch, Niederländisch, Spanisch.
-- [x] Import-Erinnerung in Tagen, Anzahl der Slots (4 oder 8), Auffälliges ausblenden und eigene Namen für die Slots.
+- [x] Import-Erinnerung in Tagen, Anzahl der Slots (4 oder 8), Verläufe geglättet starten, Auffälliges ausblenden und eigene Namen für die Slots.
 - [x] Konto-Bereich mit Anmeldung über das zentrale Konto-Portal und Schaltfläche zum sofortigen Abgleich.
 
 ## Konto und Cloud
@@ -72,4 +72,5 @@ Diese Datei ist fachlich deckungsgleich mit dem In-App-Screen Funktionsumfang (l
 - 23.11.2026: Alterslinie beim Stoffwechselalter steigt mit der Zeit; Zeitraum 3 Monate als Voreinstellung und für die Kachel-Verläufe.
 - 23.11.2026: Blättern zwischen Zeiträumen, Sport-Hintergrund und neue Kachel-Optik.
 - 23.11.2026: Verlauf per Tippen glätten oder als Rohdaten zeigen.
+- 23.11.2026: Verläufe starten standardmäßig geglättet, einstellbar.
 
