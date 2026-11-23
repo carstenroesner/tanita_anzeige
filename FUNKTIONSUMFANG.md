@@ -35,10 +35,10 @@ Diese Datei ist fachlich deckungsgleich mit dem In-App-Screen Funktionsumfang (l
 ## Dashboard und Verlauf
 
 - [x] Dashboard je Slot mit den letzten Werten: Gewicht, Körperfett, BMI, Muskelmasse, Körperwasser, Viszeralfett, Grundumsatz, Stoffwechselalter und Knochenmasse.
-- [x] Jede Kachel zeigt die Änderung zur Vormessung, eine Statusmarke (unter, im oder über dem Bereich) und einen kleinen Verlauf.
+- [x] Jede Kachel zeigt die Änderung zur Vormessung, eine Statusmarke (unter, im oder über dem Bereich) und einen kleinen Verlauf der letzten drei Monate.
 - [x] Segment-Analyse mit Fett- und Muskelwerten für beide Arme, beide Beine und den Rumpf.
-- [x] Antippen einer Kachel öffnet den großen Verlauf mit Zeitraumfilter 1W, 1M, 1J und Alles (bezogen auf die letzte Messung) sowie Minimum, Durchschnitt, Maximum und Änderung.
-- [x] Im Verlauf sind oberer und unterer Grenzwert und eine Optimum-Linie eingezeichnet. Das Optimum ist die Mitte des Bereichs.
+- [x] Antippen einer Kachel öffnet den großen Verlauf mit Zeitraumfilter 1W, 1M, 3M, 1J und Alles (bezogen auf die letzte Messung); voreingestellt sind 3 Monate sowie Minimum, Durchschnitt, Maximum und Änderung.
+- [x] Im Verlauf sind oberer und unterer Grenzwert und eine Optimum-Linie eingezeichnet. Das Optimum ist die Mitte des Bereichs. Beim Stoffwechselalter zeigt die Linie das tatsächliche Alter, das über den Zeitraum ansteigt; ohne genaues Geburtsdatum wird der 1. Januar des Geburtsjahres angenommen.
 - [x] Auffällige Messungen (Gerätedatum vor 2015, stark abweichendes Gewicht) werden standardmäßig ausgeblendet; das lässt sich in den Einstellungen ändern.
 
 ## Referenzbereiche
@@ -67,4 +67,5 @@ Diese Datei ist fachlich deckungsgleich mit dem In-App-Screen Funktionsumfang (l
 ## Änderungshistorie
 
 - 23.11.2026: Erste Version mit Startbildschirm, Import, Dashboard, Verlauf, Einstellungen und Cloud-Abgleich.
+- 23.11.2026: Alterslinie beim Stoffwechselalter steigt mit der Zeit; Zeitraum 3 Monate als Voreinstellung und für die Kachel-Verläufe.
 

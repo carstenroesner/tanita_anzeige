@@ -22,13 +22,20 @@ class SlotView {
   Measurement? get previous =>
       visible.length < 2 ? null : visible[visible.length - 2];
 
-  /// Letzte Werte einer Größe, älteste zuerst.
-  List<double> recent(Metric m, [int n = 30]) {
-    final start = visible.length > n ? visible.length - n : 0;
-    return [
-      for (var i = start; i < visible.length; i++)
-        if (m.valueOf(visible[i]) != null) m.valueOf(visible[i])!,
-    ];
+  /// Werte der letzten drei Monate (bezogen auf die letzte Messung), älteste
+  /// zuerst. Gibt es darin weniger als zwei, werden die letzten fünf gezeigt.
+  List<double> recent(Metric m) {
+    final l = last;
+    if (l == null) return const [];
+    final from = l.at.subtract(const Duration(days: 90));
+    List<double> pick(Iterable<Measurement> src) => [
+          for (final x in src)
+            if (m.valueOf(x) != null) m.valueOf(x)!,
+        ];
+    final inRange = pick(visible.where((x) => !x.at.isBefore(from)));
+    if (inRange.length >= 2) return inRange;
+    final start = visible.length > 5 ? visible.length - 5 : 0;
+    return pick(visible.sublist(start));
   }
 
   /// Referenzbereich für die Größe [m] zum Zeitpunkt der letzten Messung.

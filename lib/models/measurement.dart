@@ -122,9 +122,31 @@ class SlotData {
 
   double? get height => profile?.height ?? last?.height;
 
-  /// Alter zum Zeitpunkt [d] (Geburtsdatum aus dem Profil, sonst Angabe der
-  /// Waage bei der letzten Messung).
-  int? ageAt(DateTime d) => profile?.ageAt(d) ?? last?.age;
+  /// Geburtsdatum aus dem Profil. Fehlt es, wird aus dem Alter der letzten
+  /// Messung der 1. Januar des Geburtsjahres angenommen.
+  DateTime? get birthDate {
+    final b = profile?.birth;
+    if (b != null) return b;
+    final l = last;
+    if (l == null || l.age == null) return null;
+    return DateTime(l.at.year - l.age!, 1, 1);
+  }
+
+  /// Alter in ganzen Jahren zum Zeitpunkt [d].
+  int? ageAt(DateTime d) {
+    final b = birthDate;
+    if (b == null) return null;
+    var a = d.year - b.year;
+    if (d.month < b.month || (d.month == b.month && d.day < b.day)) a--;
+    return a;
+  }
+
+  /// Alter in Jahren mit Nachkommastellen (für die Alterslinie im Verlauf).
+  double? ageYearsAt(DateTime d) {
+    final b = birthDate;
+    if (b == null) return null;
+    return d.difference(b).inHours / 24 / 365.25;
+  }
 
   Map<String, dynamic> toJson() => {
         if (profile != null) 'p': profile!.toJson(),

@@ -90,6 +90,7 @@ class RangeChart extends StatelessWidget {
     this.upperLabel,
     this.lowerLabel,
     this.optLabel,
+    this.optEnd,
     this.height = 280,
   });
 
@@ -102,6 +103,9 @@ class RangeChart extends StatelessWidget {
   final String? upperLabel;
   final String? lowerLabel;
   final String? optLabel;
+
+  /// Wert der Optimum-Linie am rechten Rand; [RefRange.opt] gilt dann links.
+  final double? optEnd;
   final double height;
 
   @override
@@ -121,6 +125,7 @@ class RangeChart extends StatelessWidget {
           upperLabel: upperLabel,
           lowerLabel: lowerLabel,
           optLabel: optLabel,
+          optEnd: optEnd,
           line: scheme.primary,
           grid: scheme.outlineVariant,
           text: scheme.onSurfaceVariant,
@@ -144,6 +149,7 @@ class _ChartPainter extends CustomPainter {
     required this.upperLabel,
     required this.lowerLabel,
     required this.optLabel,
+    required this.optEnd,
     required this.line,
     required this.grid,
     required this.text,
@@ -161,6 +167,7 @@ class _ChartPainter extends CustomPainter {
   final String? upperLabel;
   final String? lowerLabel;
   final String? optLabel;
+  final double? optEnd;
   final Color line;
   final Color grid;
   final Color text;
@@ -231,6 +238,7 @@ class _ChartPainter extends CustomPainter {
       if (range?.lo != null) range!.lo!,
       if (range?.hi != null) range!.hi!,
       if (range?.opt != null) range!.opt!,
+      if (optEnd != null) optEnd!,
     ];
     if (vals.isEmpty) return;
     var lo = vals.reduce(math.min);
@@ -289,22 +297,26 @@ class _ChartPainter extends CustomPainter {
       }
     }
     if (r != null && r.opt != null) {
-      final yy = y(r.opt!);
-      if (yy >= plot.top && yy <= plot.bottom) {
-        final optPaint = Paint()
-          ..color = text
-          ..strokeWidth = 1.2;
-        for (var d = plot.left; d < plot.right; d += 6) {
-          canvas.drawLine(
-            Offset(d, yy),
-            Offset(math.min(d + 2, plot.right), yy),
-            optPaint,
-          );
-        }
-        if (optLabel != null) {
-          _label(canvas, optLabel!, Offset(plot.right - 4, yy - 15),
-              color: text, weight: FontWeight.w600, alignRight: true);
-        }
+      final startV = r.opt!;
+      final endV = optEnd ?? startV;
+      final y0 = y(startV);
+      final y1 = y(endV);
+      final optPaint = Paint()
+        ..color = text
+        ..strokeWidth = 1.2;
+      final total = plot.width;
+      for (var d = 0.0; d < total; d += 6) {
+        final e = math.min(d + 2, total);
+        canvas.drawLine(
+          Offset(plot.left + d, y0 + (y1 - y0) * d / total),
+          Offset(plot.left + e, y0 + (y1 - y0) * e / total),
+          optPaint,
+        );
+      }
+      if (optLabel != null) {
+        final ly = (y1 - 15).clamp(plot.top, plot.bottom - 14).toDouble();
+        _label(canvas, optLabel!, Offset(plot.right - 4, ly),
+            color: text, weight: FontWeight.w600, alignRight: true);
       }
     }
 

@@ -10,7 +10,7 @@ import '../services/tanita_service.dart';
 import '../widgets/charts.dart';
 import '../widgets/status_chip.dart';
 
-enum _Range { week, month, year, all }
+enum _Range { week, month, quarter, year, all }
 
 /// Großer Verlauf einer Größe mit Zeitraumfilter und Referenzlinien.
 class DetailScreen extends StatefulWidget {
@@ -25,7 +25,7 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   late Metric _metric = widget.metric;
-  _Range _range = _Range.all;
+  _Range _range = _Range.quarter;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +56,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final start = switch (_range) {
       _Range.week => end.subtract(const Duration(days: 7)),
       _Range.month => end.subtract(const Duration(days: 30)),
+      _Range.quarter => end.subtract(const Duration(days: 90)),
       _Range.year => end.subtract(const Duration(days: 365)),
       _Range.all => view.visible.first.at,
     };
@@ -64,7 +65,15 @@ class _DetailScreenState extends State<DetailScreen> {
         if (!m.at.isBefore(start) && _metric.valueOf(m) != null)
           ChartPoint(m.at, _metric.valueOf(m)!),
     ];
-    final range = view.reference(_metric);
+    var range = view.reference(_metric);
+    double? optEnd;
+    if (_metric == Metric.metaAge) {
+      // Tatsächliches Alter: steigt über den Zeitraum an.
+      final a0 = data.ageYearsAt(start);
+      final a1 = data.ageYearsAt(end);
+      range = a0 == null || a1 == null ? null : RefRange(opt: a0);
+      optEnd = a1;
+    }
     final lastValue = _metric.valueOf(last);
     final status = lastValue == null ? RefStatus.none : statusOf(range, lastValue);
 
@@ -80,7 +89,7 @@ class _DetailScreenState extends State<DetailScreen> {
       }
       if (range.opt != null) {
         opt = _metric == Metric.metaAge
-            ? tr(lang, 'ref_age_line', [num(range.opt!)])
+            ? tr(lang, 'ref_age_line', [num(optEnd ?? range.opt!)])
             : tr(lang, 'ref_opt', [num(range.opt!)]);
       }
     }
@@ -161,6 +170,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 segments: [
                   ButtonSegment(value: _Range.week, label: Text(tr(lang, 'range_1w'))),
                   ButtonSegment(value: _Range.month, label: Text(tr(lang, 'range_1m'))),
+                  ButtonSegment(value: _Range.quarter, label: Text(tr(lang, 'range_3m'))),
                   ButtonSegment(value: _Range.year, label: Text(tr(lang, 'range_1y'))),
                   ButtonSegment(value: _Range.all, label: Text(tr(lang, 'range_all'))),
                 ],
@@ -184,6 +194,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   upperLabel: upper,
                   lowerLabel: lower,
                   optLabel: opt,
+                  optEnd: optEnd,
                 ),
               const SizedBox(height: 8),
               Text(
