@@ -36,3 +36,7 @@ String fmtShortDate(String lang, DateTime d) {
       ? '${_two(d.month)}/$y'
       : '${_two(d.month)}.$y';
 }
+
+String fmtDayMonth(String lang, DateTime d) => lang == 'en' || lang == 'es'
+    ? '${_two(d.month)}/${_two(d.day)}'
+    : '${_two(d.day)}.${_two(d.month)}.';

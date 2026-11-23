@@ -94,7 +94,10 @@ const List<FeatureSection> featureOverviewSections = [
       'Segment-Analyse mit Fett- und Muskelwerten für beide Arme, beide Beine und den Rumpf.',
     ),
     FeatureItem(
-      'Antippen einer Kachel öffnet den großen Verlauf mit Zeitraumfilter 1W, 1M, 3M, 1J und Alles (bezogen auf die letzte Messung); voreingestellt sind 3 Monate sowie Minimum, Durchschnitt, Maximum und Änderung.',
+      'Antippen einer Kachel öffnet den großen Verlauf mit Zeitraumfilter 1W, 1M, 3M, 1J und Alles (bezogen auf die letzte Messung); voreingestellt sind 3 Monate. Mit den Pfeilen lässt sich um jeweils einen Zeitraum zurück- und wieder vorwärtsblättern (zum Beispiel ins vorherige Quartal), der gewählte Zeitraum wird mit Datum angezeigt sowie Minimum, Durchschnitt, Maximum und Änderung.',
+    ),
+    FeatureItem(
+      'Optik: unscharfer, überbelichteter Sport-Hintergrund aus abstrakten Silhouetten (keine erkennbaren Personen), Farbverlauf-Kacheln und kräftige Schrift.',
     ),
     FeatureItem(
       'Im Verlauf sind oberer und unterer Grenzwert und eine Optimum-Linie eingezeichnet. Das Optimum ist die Mitte des Bereichs. Beim Stoffwechselalter zeigt die Linie das tatsächliche Alter, das über den Zeitraum ansteigt; ohne genaues Geburtsdatum wird der 1. Januar des Geburtsjahres angenommen.',
@@ -151,6 +154,10 @@ const List<FeatureSection> featureOverviewSections = [
     ),
     FeatureItem(
       '23.11.2026: Alterslinie beim Stoffwechselalter steigt mit der Zeit; Zeitraum 3 Monate als Voreinstellung und für die Kachel-Verläufe.',
+      FeatureStatus.info,
+    ),
+    FeatureItem(
+      '23.11.2026: Blättern zwischen Zeiträumen, Sport-Hintergrund und neue Kachel-Optik.',
       FeatureStatus.info,
     ),
   ]),

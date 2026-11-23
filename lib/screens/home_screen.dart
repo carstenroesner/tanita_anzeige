@@ -9,6 +9,7 @@ import '../services/settings_service.dart';
 import '../services/tanita_service.dart';
 import '../services/tanita_sync.dart';
 import '../widgets/app_menu.dart';
+import '../widgets/backdrop.dart';
 import 'dashboard_screen.dart';
 import 'import_screen.dart';
 
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
     final days = last == null ? null : DateTime.now().difference(last).inDays;
     final due = last == null || days! >= settings.remindDays;
 
-    return Scaffold(
+    return BackdropScaffold(
       appBar: AppBar(
         title: Text(context.t('app_title')),
         actions: [
@@ -239,53 +240,85 @@ class _SlotTile extends StatelessWidget {
     final lastM = view.last ?? data.last;
     final weight = lastM?['Wk'];
     final title = settings.nameOf(slotNumber) ?? profileLine(lang, data);
+    const onGrad = Colors.white;
     return Card(
       margin: EdgeInsets.zero,
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => DashboardScreen(slotNumber: slotNumber),
+      child: Ink(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.teal, AppColors.tealLight],
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$slotNumber',
-                style: TextStyle(
-                  fontSize: 56,
-                  height: 1,
-                  fontWeight: FontWeight.w700,
-                  color: scheme.primary,
+        child: InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => DashboardScreen(slotNumber: slotNumber),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$slotNumber',
+                      style: const TextStyle(
+                        fontSize: 64,
+                        height: 1,
+                        fontWeight: FontWeight.w900,
+                        fontStyle: FontStyle.italic,
+                        color: onGrad,
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 12,
+                      height: 12,
+                      margin: const EdgeInsets.only(top: 6),
+                      decoration: const BoxDecoration(
+                        color: AppColors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
-              ),
-              const Spacer(),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  weight == null ? '–' : '${fmtNum(lang, weight)} kg',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: Color(0xCCFFFFFF)),
                 ),
-              ),
-              Text(
-                data.lastImport == null
-                    ? ''
-                    : tr(lang, 'home_import_label', [fmtDate(lang, data.lastImport!)]),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
-              ),
-            ],
+                const Spacer(),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    weight == null ? '–' : '${fmtNum(lang, weight)} kg',
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: onGrad,
+                    ),
+                  ),
+                ),
+                Text(
+                  data.lastImport == null
+                      ? ''
+                      : tr(lang, 'home_import_label', [fmtDate(lang, data.lastImport!)]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: Color(0xCCFFFFFF)),
+                ),
+              ],
+            ),
           ),
         ),
       ),

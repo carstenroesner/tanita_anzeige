@@ -7,6 +7,7 @@ import '../models/metrics.dart';
 import '../models/slot_view.dart';
 import '../services/settings_service.dart';
 import '../services/tanita_service.dart';
+import '../widgets/backdrop.dart';
 import '../widgets/charts.dart';
 import '../widgets/status_chip.dart';
 
@@ -27,6 +28,17 @@ class _DetailScreenState extends State<DetailScreen> {
   late Metric _metric = widget.metric;
   _Range _range = _Range.quarter;
 
+  /// Wie viele Zeiträume zurückgeblättert wurde (0 = aktuellster).
+  int _offset = 0;
+
+  static Duration _length(_Range r) => switch (r) {
+        _Range.week => const Duration(days: 7),
+        _Range.month => const Duration(days: 30),
+        _Range.quarter => const Duration(days: 90),
+        _Range.year => const Duration(days: 365),
+        _Range.all => Duration.zero,
+      };
+
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsService>();
@@ -37,7 +49,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final title =
         settings.nameOf(widget.slotNumber) ?? tr(lang, 'slot_title', [widget.slotNumber]);
     if (data == null) {
-      return Scaffold(
+      return BackdropScaffold(
         appBar: AppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
@@ -45,24 +57,25 @@ class _DetailScreenState extends State<DetailScreen> {
     final view = SlotView(data, hideSuspicious: settings.hideSuspicious);
     final last = view.last;
     if (last == null) {
-      return Scaffold(
+      return BackdropScaffold(
         appBar: AppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
     }
 
     final info = _metric.info;
-    final end = last.at;
-    final start = switch (_range) {
-      _Range.week => end.subtract(const Duration(days: 7)),
-      _Range.month => end.subtract(const Duration(days: 30)),
-      _Range.quarter => end.subtract(const Duration(days: 90)),
-      _Range.year => end.subtract(const Duration(days: 365)),
-      _Range.all => view.visible.first.at,
-    };
+    final first = view.visible.first.at;
+    final len = _length(_range);
+    final paged = _range != _Range.all;
+    final end = paged ? last.at.subtract(len * _offset) : last.at;
+    final start = paged ? end.subtract(len) : first;
+    final canBack = paged && start.isAfter(first);
+    final canForward = paged && _offset > 0;
     final points = <ChartPoint>[
       for (final m in view.visible)
-        if (!m.at.isBefore(start) && _metric.valueOf(m) != null)
+        if (!m.at.isBefore(start) &&
+            !m.at.isAfter(end) &&
+            _metric.valueOf(m) != null)
           ChartPoint(m.at, _metric.valueOf(m)!),
     ];
     var range = view.reference(_metric);
@@ -122,7 +135,7 @@ class _DetailScreenState extends State<DetailScreen> {
       refText = '$refText ${tr(lang, 'ref_opt_note')}';
     }
 
-    return Scaffold(
+    return BackdropScaffold(
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: ConstrainedBox(
@@ -165,18 +178,47 @@ class _DetailScreenState extends State<DetailScreen> {
                 ],
               ),
               const SizedBox(height: 12),
-              SegmentedButton<_Range>(
-                showSelectedIcon: false,
-                segments: [
-                  ButtonSegment(value: _Range.week, label: Text(tr(lang, 'range_1w'))),
-                  ButtonSegment(value: _Range.month, label: Text(tr(lang, 'range_1m'))),
-                  ButtonSegment(value: _Range.quarter, label: Text(tr(lang, 'range_3m'))),
-                  ButtonSegment(value: _Range.year, label: Text(tr(lang, 'range_1y'))),
-                  ButtonSegment(value: _Range.all, label: Text(tr(lang, 'range_all'))),
-                ],
-                selected: {_range},
-                onSelectionChanged: (s) => setState(() => _range = s.first),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (final r in _Range.values)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(tr(lang, _rangeKey(r))),
+                          selected: r == _range,
+                          onSelected: (_) => setState(() {
+                            _range = r;
+                            _offset = 0;
+                          }),
+                        ),
+                      ),
+                  ],
+                ),
               ),
+              if (paged)
+                Row(
+                  children: [
+                    IconButton(
+                      tooltip: tr(lang, 'range_prev'),
+                      icon: const Icon(Icons.chevron_left),
+                      onPressed: canBack ? () => setState(() => _offset++) : null,
+                    ),
+                    Expanded(
+                      child: Text(
+                        '${fmtDate(lang, start)} – ${fmtDate(lang, end)}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: tr(lang, 'range_next'),
+                      icon: const Icon(Icons.chevron_right),
+                      onPressed: canForward ? () => setState(() => _offset--) : null,
+                    ),
+                  ],
+                ),
               const SizedBox(height: 12),
               if (points.isEmpty)
                 Padding(
@@ -189,7 +231,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   xMin: start,
                   xMax: end,
                   range: range,
-                  xLabel: (t) => fmtShortDate(lang, t),
+                  xLabel: (t) => len <= const Duration(days: 100) && paged
+                      ? fmtDayMonth(lang, t)
+                      : fmtShortDate(lang, t),
                   numLabel: num,
                   upperLabel: upper,
                   lowerLabel: lower,
@@ -228,6 +272,14 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 }
+
+String _rangeKey(_Range r) => switch (r) {
+      _Range.week => 'range_1w',
+      _Range.month => 'range_1m',
+      _Range.quarter => 'range_3m',
+      _Range.year => 'range_1y',
+      _Range.all => 'range_all',
+    };
 
 class _Stat extends StatelessWidget {
   const _Stat({required this.label, required this.value});

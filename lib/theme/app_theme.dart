@@ -18,7 +18,18 @@ class AppTheme {
         brightness: brightness,
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      appBarTheme: const AppBarTheme(centerTitle: false),
+      appBarTheme: const AppBarTheme(
+        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        titleTextStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w800,
+          fontStyle: FontStyle.italic,
+          letterSpacing: -0.3,
+        ),
+      ),
     );
   }
 }

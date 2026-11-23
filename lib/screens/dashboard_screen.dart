@@ -8,6 +8,7 @@ import '../models/metrics.dart';
 import '../models/slot_view.dart';
 import '../services/settings_service.dart';
 import '../services/tanita_service.dart';
+import '../widgets/backdrop.dart';
 import '../widgets/charts.dart';
 import 'detail_screen.dart';
 
@@ -26,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
     final title = settings.nameOf(slotNumber) ?? tr(lang, 'slot_title', [slotNumber]);
 
     if (data == null) {
-      return Scaffold(
+      return BackdropScaffold(
         appBar: AppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
@@ -34,13 +35,13 @@ class DashboardScreen extends StatelessWidget {
     final view = SlotView(data, hideSuspicious: settings.hideSuspicious);
     final last = view.last;
     if (last == null) {
-      return Scaffold(
+      return BackdropScaffold(
         appBar: AppBar(title: Text(title)),
         body: Center(child: Text(context.t('dash_no_data'))),
       );
     }
     final scheme = Theme.of(context).colorScheme;
-    return Scaffold(
+    return BackdropScaffold(
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: ConstrainedBox(
